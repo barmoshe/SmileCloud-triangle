@@ -72,8 +72,8 @@ const scaledPoints = computed(() => {
   const xRange = maxX - minX || 1; // Avoid division by zero
   const yRange = maxY - minY || 1;
   
-  // Apply 20% padding to each side
-  const paddingPercentage = 0.2;
+  // Apply 15% padding to each side
+  const paddingPercentage = 0.15;
   const paddingX = xRange * paddingPercentage;
   const paddingY = yRange * paddingPercentage;
   
@@ -114,7 +114,7 @@ const scaledPoints = computed(() => {
   };
 });
 
-// Calculate angles using the law of cosines
+// Calculate angles
 const angles = computed<TriangleAngles>(() => {
   const { p1: sp1, p2: sp2, p3: sp3 } = scaledPoints.value;
   

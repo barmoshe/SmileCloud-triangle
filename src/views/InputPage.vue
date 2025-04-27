@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import type { Point, Triangle } from '../types/interfaces';
+import type {  Triangle } from '../types/interfaces';
 
 const router = useRouter();
 const x1 = ref<number | string>('');
