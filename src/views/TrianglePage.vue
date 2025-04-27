@@ -2,14 +2,10 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AngleArc from '../components/AngleArc.vue';
+import type { Point, TriangleAngles, TriangleArcAngles } from '../types/interfaces';
 
 const route = useRoute();
 const router = useRouter();
-
-interface Point {
-  x: number;
-  y: number;
-}
 
 // Get coordinates from query parameters
 const p1 = ref<Point>({ x: 0, y: 0 });
@@ -76,8 +72,8 @@ const scaledPoints = computed(() => {
   const xRange = maxX - minX || 1; // Avoid division by zero
   const yRange = maxY - minY || 1;
   
-  // Apply 10% padding to each side
-  const paddingPercentage = 0.1;
+  // Apply 20% padding to each side
+  const paddingPercentage = 0.2;
   const paddingX = xRange * paddingPercentage;
   const paddingY = yRange * paddingPercentage;
   
@@ -119,7 +115,7 @@ const scaledPoints = computed(() => {
 });
 
 // Calculate angles using the law of cosines
-const angles = computed(() => {
+const angles = computed<TriangleAngles>(() => {
   const { p1: sp1, p2: sp2, p3: sp3 } = scaledPoints.value;
   
   // Calculate distances between points (sides of the triangle)
@@ -140,29 +136,9 @@ const angles = computed(() => {
   };
 });
 
-// Calculate angle between two vectors
-function calculateAngle(p1: Point, center: Point, p2: Point): number {
-  // Convert to vectors from center
-  const v1 = { x: p1.x - center.x, y: p1.y - center.y };
-  const v2 = { x: p2.x - center.x, y: p2.y - center.y };
-  
-  // Calculate the angle between vectors (in degrees)
-  const dotProduct = v1.x * v2.x + v1.y * v2.y;
-  const magnitudeV1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y);
-  const magnitudeV2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
-  
-  // Avoid division by zero
-  if (magnitudeV1 === 0 || magnitudeV2 === 0) return 0;
-  
-  // Get the angle in radians
-  const angleRad = Math.acos(dotProduct / (magnitudeV1 * magnitudeV2));
-  
-  // Convert to degrees
-  return angleRad * 180 / Math.PI;
-}
 
 // Calculate angles for arc rendering
-const arcAngles = computed(() => {
+const arcAngles = computed<TriangleArcAngles>(() => {
   const { p1, p2, p3 } = scaledPoints.value;
   
   // For SVG coordinate system

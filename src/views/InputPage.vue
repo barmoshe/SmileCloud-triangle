@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import type { Point, Triangle } from '../types/interfaces';
 
 const router = useRouter();
 const x1 = ref<number | string>('');
@@ -17,22 +18,26 @@ const allFieldsFilled = computed(() => {
   );
 });
 
+// Get points as a Triangle object
+const trianglePoints = computed<Triangle>(() => {
+  return {
+    p1: { x: Number(x1.value) || 0, y: Number(y1.value) || 0 },
+    p2: { x: Number(x2.value) || 0, y: Number(y2.value) || 0 },
+    p3: { x: Number(x3.value) || 0, y: Number(y3.value) || 0 }
+  };
+});
+
 // Check if points might form a straight line
 const mightFormStraightLine = computed(() => {
   if (!allFieldsFilled.value) return false;
   
-  const px1 = Number(x1.value);
-  const py1 = Number(y1.value);
-  const px2 = Number(x2.value);
-  const py2 = Number(y2.value);
-  const px3 = Number(x3.value);
-  const py3 = Number(y3.value);
+  const { p1, p2, p3 } = trianglePoints.value;
   
   // Calculate area of triangle
   const area = Math.abs(
-    (px1 * (py2 - py3) +
-     px2 * (py3 - py1) +
-     px3 * (py1 - py2)) / 2
+    (p1.x * (p2.y - p3.y) +
+     p2.x * (p3.y - p1.y) +
+     p3.x * (p1.y - p2.y)) / 2
   );
   
   // If area is very close to zero, points are collinear (straight line)
@@ -46,15 +51,17 @@ const showTriangle = () => {
     }
   }
   
+  const { p1, p2, p3 } = trianglePoints.value;
+  
   router.push({
     name: 'triangle',
     query: {
-      x1: x1.value,
-      y1: y1.value,
-      x2: x2.value,
-      y2: y2.value,
-      x3: x3.value,
-      y3: y3.value
+      x1: p1.x,
+      y1: p1.y,
+      x2: p2.x,
+      y2: p2.y,
+      x3: p3.x,
+      y3: p3.y
     }
   });
 };

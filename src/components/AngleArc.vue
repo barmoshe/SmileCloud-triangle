@@ -1,12 +1,7 @@
 <script setup lang="ts">
-defineProps<{
-  cx: number;
-  cy: number;
-  radius: number;
-  startAngle: number;
-  endAngle: number;
-  color: string;
-}>();
+import type { AngleArcProps } from '../types/interfaces';
+
+defineProps<AngleArcProps>();
 
 // Function to calculate the coordinates of a point on a circle
 function polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
